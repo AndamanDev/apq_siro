@@ -11,3 +11,5 @@ kiosk/tickets-pdf/*.pdf
 dist/
 *.log
 .DS_Store
+logs/
+backup/
