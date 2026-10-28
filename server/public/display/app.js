@@ -155,6 +155,17 @@ const _unlockOnce = () => {
 };
 _unlockEvents.forEach((ev) => document.addEventListener(ev, _unlockOnce, { once: true, passive: true }));
 
+// เสียงถูกบล็อก -> ขึ้นป้ายบอก (ไม่งั้นเรียกคิวแล้วเงียบ โดยไม่รู้สาเหตุ) · แตะจอ/กดปุ่มใดก็ได้ = เปิดเสียง
+const _soundBanner = el('div', { class: 'sound-blocked hidden' }, '🔇 เสียงเรียกคิวถูกปิดโดยเบราว์เซอร์ — แตะจอหรือกดปุ่มใดก็ได้ เพื่อเปิดเสียง');
+document.body.appendChild(_soundBanner);
+function checkSound() {
+  _soundBanner.classList.toggle('hidden', !(announcer.enabled && announcer.isBlocked()));
+}
+['pointerdown', 'keydown', 'touchstart'].forEach((ev) =>
+  document.addEventListener(ev, () => { announcer.unlock(); setTimeout(checkSound, 300); }, { passive: true }));
+setTimeout(checkSound, 1500);
+setInterval(checkSound, 5000);
+
 // กันจอดับ/สกรีนเซฟเวอร์ ขณะเปิดหน้า display (Screen Wake Lock)
 let _wakeLock = null;
 async function keepAwake() {

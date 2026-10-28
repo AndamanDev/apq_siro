@@ -19,6 +19,8 @@ class Announcer {
   }
 
   setEnabled(v) { this.enabled = v; }
+  // true = เบราว์เซอร์ยังไม่ยอมให้เล่นเสียง (ต้องแตะจอ/กดปุ่ม หรือเปิดด้วย display-edge.bat / start-display.cmd)
+  isBlocked() { const c = this._ctxObj(); return !!c && c.state !== 'running'; }
   setGap(ms) { this.gapMs = ms || 250; }
   setSegGap(ms) { this.segGapMs = ms != null ? ms : 60; }
 
@@ -86,7 +88,9 @@ class Announcer {
     if (!payload || !payload.length) throw new Error('no payload');
     const ctx = this._ctxObj();
     if (!ctx) throw new Error('no audiocontext');
-    if (ctx.state === 'suspended') await ctx.resume();
+    // เบราว์เซอร์บล็อกเสียง (ยังไม่มีคนแตะจอ) -> resume() ค้างไม่จบ: รอแค่ 1.5 วิ แล้วข้าม ไม่ให้คิวเสียงค้างทั้งจอ
+    if (ctx.state === 'suspended') await Promise.race([ctx.resume(), this._wait(1500)]);
+    if (ctx.state !== 'running') throw new Error('audio blocked');
 
     // โหลดทุกคำให้พร้อมก่อน (ขนานกัน) — ถ้าคำใดขาด จะ throw ไป fallback TTS ทั้งประโยค
     const buffers = await Promise.all(payload.map((k) => this._loadBuffer(k)));
