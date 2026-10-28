@@ -29,6 +29,7 @@ const backupNow = (reason) => spawnSync(process.execPath, ['--no-warnings=Experi
 const ITEMS = [
     { group: 'ใช้ประจำ' },
     { label: 'ตรวจสถานะระบบ', desc: 'server · ฐานข้อมูล · สำรองล่าสุด · Kiosk · ไฟร์วอลล์ · IP — ดูก่อนเมื่อจอ/เครื่องห้องมีปัญหา', run: status },
+    { label: 'เปิดหน้าแดชบอร์ด', desc: `เปิดหน้าหลักในเบราว์เซอร์ (http://localhost:${PORT}) — เครื่องอื่นใช้ http://<IP เครื่องนี้>:${PORT}`, run: openDashboard },
     { label: 'รีสตาร์ท server', desc: 'หน้าเว็บค้าง / จอไม่อัปเดตเลขคิว / เพิ่งแก้ค่าในเครื่อง — ระบบหยุด ~5 วินาที', run: restart },
     { label: 'ดูที่อยู่เครื่องแม่ข่าย (IP)', desc: 'ใช้ตั้งเครื่องจอแสดงผล (start-display.cmd) และเครื่องประจำห้อง (/calling)', run: showIp },
     { label: 'เปิดจอแสดงผลบนเครื่องนี้', desc: 'Chrome เต็มจอพร้อมเสียงเรียกคิว — เครื่องอื่นใช้ไฟล์ start-display.cmd', run: () => runCmd('start-display.cmd') },
@@ -58,6 +59,13 @@ async function restart() {
     console.log('  เปิดใหม่…');
     if (!(await startServer())) return fail('server ไม่กลับมา — เลือก "ดู log ล่าสุด" ถ่ายรูปส่งช่าง');
     console.log(`\n${C.g}  ✓ server ทำงานแล้ว${C.x} ${C.dim}— จอ/เครื่องห้องต่อกลับเอง ไม่ต้องรีเฟรช${C.x}`);
+    return true;
+}
+
+async function openDashboard() {
+    if (!(await health()).ok) console.log(`  ${C.y}server ยังไม่ตอบ — หน้าเว็บอาจว่าง ลอง "รีสตาร์ท server"${C.x}`);
+    spawnSync('cmd', ['/c', 'start', '', `http://localhost:${PORT}/`], { stdio: 'ignore' });
+    console.log('  เปิดในเบราว์เซอร์แล้ว');
     return true;
 }
 
