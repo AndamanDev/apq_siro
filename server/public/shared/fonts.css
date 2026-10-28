@@ -1,0 +1,44 @@
+/* ===== APQueue local fonts (offline — ไม่พึ่ง Google Fonts CDN) =====
+   ใช้ฟอนต์ที่ฝังในเครื่องที่ /fonts/ : Sarabun (เนื้อหา) + Prompt (หัวข้อ) */
+
+@font-face {
+  font-family: 'Sarabun';
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/fonts/Sarabun-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Sarabun';
+  font-style: normal; font-weight: 600; font-display: swap;
+  src: url('/fonts/Sarabun-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Sarabun';
+  font-style: normal; font-weight: 700; font-display: swap;
+  src: url('/fonts/Sarabun-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Prompt';
+  font-style: normal; font-weight: 300; font-display: swap;
+  src: url('/fonts/Prompt-Light.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Prompt';
+  font-style: normal; font-weight: 400; font-display: swap;
+  src: url('/fonts/Prompt-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Prompt';
+  font-style: normal; font-weight: 500; font-display: swap;
+  src: url('/fonts/Prompt-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Prompt';
+  font-style: normal; font-weight: 600; font-display: swap;
+  src: url('/fonts/Prompt-SemiBold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Prompt';
+  font-style: normal; font-weight: 700; font-display: swap;
+  src: url('/fonts/Prompt-Bold.ttf') format('truetype');
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>รายงานระบบคิว</title>
+  <link rel="stylesheet" href="/shared/fonts.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="bar no-print">
+    <div class="bar-left">
+      <a class="btn back" href="/"><i data-lucide="arrow-left"></i> ภาพรวม</a>
+      <h1>รายงานระบบคิว</h1>
+    </div>
+    <div class="controls">
+      <label>ตั้งแต่ <input type="date" id="from" /></label>
+      <label>ถึง <input type="date" id="to" /></label>
+      <button class="btn" id="run"><i data-lucide="bar-chart-3"></i> แสดงรายงาน</button>
+      <button class="btn sec" id="print"><i data-lucide="printer"></i> พิมพ์</button>
+    </div>
+  </header>
+
+  <div class="report-head print-only">
+    <h2 id="rhTitle">รายงานระบบคิว</h2>
+    <div id="rhRange"></div>
+  </div>
+
+  <main class="content" id="content"></main>
+
+  <script src="/shared/vendor/lucide.min.js"></script>
+  <script src="/shared/common.js"></script>
+  <script src="app.js"></script>
+  <script>if (window.lucide) lucide.createIcons();</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "serverUrl": "http://192.168.1.100:8888",
+  "kioskId": "kiosk-1",
+  "fullscreen": true,
+  "width": 768,
+  "height": 1024,
+  "printer": {
+    "mode": "thermal",
+    "type": "epson",
+    "interface": "tcp://192.168.1.50:9100",
+    "characterSet": "THAI",
+    "width": 48,
+    "pdfDir": "tickets-pdf",
+    "comment": "mode: 'thermal' = พิมพ์เครื่องความร้อน, 'pdf' = บันทึกเป็นไฟล์ PDF ลงโฟลเดอร์ pdfDir (สำหรับทดสอบ/ไม่มีเครื่องพิมพ์) | interface ตัวอย่าง: 'tcp://<ip>:9100', 'printer:ชื่อเครื่องพิมพ์ใน Windows', '//localhost/ชื่อแชร์' | ตั้งค่าผ่านหน้าจอด้วย Ctrl+Shift+P"
+  }
+}

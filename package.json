@@ -1,0 +1,22 @@
+{
+  "name": "queue_2026",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ระบบคิวศูนย์การแพทย์ - รังสีรักษา (Queue Management System)",
+  "workspaces": [
+    "server",
+    "kiosk"
+  ],
+  "scripts": {
+    "start": "npm --workspace server run start",
+    "dev": "npm --workspace server run dev",
+    "seed": "npm --workspace server run seed",
+    "kiosk": "npm --workspace kiosk run start"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "7zip-bin": "^5.2.0"
+  }
+}

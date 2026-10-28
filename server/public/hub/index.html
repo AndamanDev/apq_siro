@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>APQueue — ภาพรวมระบบ</title>
+  <link rel="stylesheet" href="/shared/fonts.css" />
+  <link rel="stylesheet" href="/shared/medflow-tokens.css" />
+  <link rel="stylesheet" href="/shared/medflow-components.css" />
+  <link rel="stylesheet" href="/hub/style.css" />
+</head>
+<body>
+  <!-- Login overlay -->
+  <div class="mc-modal-overlay" id="loginOverlay">
+    <form class="mc-modal login-modal" id="loginForm">
+      <div class="login-brand">
+        <span class="brand-mark">A</span>
+        <span class="brand-name">AP<span>Queue</span></span>
+      </div>
+      <p class="login-sub">ระบบบริหารคิวผู้ป่วย — เข้าสู่ระบบเพื่อดำเนินการ</p>
+      <div class="mc-form-group">
+        <label class="mc-form-label" for="username">ชื่อผู้ใช้</label>
+        <input class="mc-form-input" id="username" placeholder="ชื่อผู้ใช้" autocomplete="username" value="admin" />
+      </div>
+      <div class="mc-form-group">
+        <label class="mc-form-label" for="password">รหัสผ่าน</label>
+        <input class="mc-form-input" id="password" type="password" placeholder="รหัสผ่าน" autocomplete="current-password" value="123456" />
+      </div>
+      <div class="err" id="loginErr"></div>
+      <button type="submit" class="mc-btn mc-btn-primary mc-btn-block mc-btn-lg">
+        <i data-lucide="log-in"></i> เข้าสู่ระบบ
+      </button>
+    </form>
+  </div>
+
+  <div class="app">
+    <!-- ===== Sidebar ===== -->
+    <aside class="sidebar">
+      <div class="side-brand">
+        <span class="brand-mark">A</span>
+        <span class="brand-name">AP<span>Queue</span></span>
+      </div>
+
+      <nav class="side-nav">
+        <div class="nav-group">เมนูหลัก</div>
+        <a class="nav-item active" href="/"><i data-lucide="layout-dashboard"></i><span>ภาพรวม</span></a>
+        <a class="nav-item" href="/calling"><i data-lucide="megaphone"></i><span>เรียกคิว</span></a>
+        <a class="nav-item" href="/display" target="_blank"><i data-lucide="monitor"></i><span>จอแสดงผล</span><i data-lucide="external-link" class="nav-ext"></i></a>
+        <a class="nav-item" href="/kiosk-web" target="_blank"><i data-lucide="ticket"></i><span>ออกบัตรคิว</span><i data-lucide="external-link" class="nav-ext"></i></a>
+
+        <div class="nav-group">จัดการ</div>
+        <a class="nav-item" href="/reports"><i data-lucide="chart-line"></i><span>รายงาน</span></a>
+        <a class="nav-item" href="/settings"><i data-lucide="settings"></i><span>ตั้งค่า</span></a>
+      </nav>
+
+      <div class="side-foot">
+        <div class="side-user">
+          <span class="user-av"><i data-lucide="user-round"></i></span>
+          <span class="user-name" id="whoami">—</span>
+        </div>
+        <button id="logout" class="mc-btn mc-btn-outline mc-btn-sm mc-btn-block"><i data-lucide="log-out"></i> ออกจากระบบ</button>
+      </div>
+    </aside>
+
+    <!-- ===== Main ===== -->
+    <div class="main">
+      <header class="page-head">
+        <div>
+          <h1 class="page-title">ภาพรวมระบบ</h1>
+          <div class="page-sub" id="todayDate">—</div>
+        </div>
+        <div class="page-tools">
+          <span class="clock"><i data-lucide="clock-3"></i><span id="clockText">—</span></span>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- สถานะระบบ -->
+        <section class="status-bar">
+          <div class="status-pill" id="serverPill">
+            <span class="dot" id="serverDot"></span>
+            <i data-lucide="server"></i>
+            <span>เซิร์ฟเวอร์ · <b id="serverState">กำลังตรวจสอบ</b></span>
+          </div>
+          <div class="status-pill" id="socketPill">
+            <span class="dot" id="socketDot"></span>
+            <i data-lucide="radio"></i>
+            <span>เรียลไทม์ · <b id="socketState">กำลังเชื่อมต่อ</b></span>
+          </div>
+          <div class="status-pill muted">
+            <i data-lucide="refresh-cw"></i>
+            <span>อัปเดต <b id="lastUpdate">—</b></span>
+          </div>
+        </section>
+
+        <!-- ยอดรวมวันนี้ -->
+        <div class="section-head">
+          <i data-lucide="chart-no-axes-column"></i>
+          <h2>ยอดรวมทั้งระบบวันนี้</h2>
+        </div>
+        <section class="stats">
+          <div class="stat">
+            <span class="stat-ic ic-slate"><i data-lucide="ticket"></i></span>
+            <div class="stat-body"><div class="stat-label">ออกบัตรทั้งหมด</div><div class="stat-value" id="totIssued">0</div></div>
+          </div>
+          <div class="stat">
+            <span class="stat-ic ic-gold"><i data-lucide="hourglass"></i></span>
+            <div class="stat-body"><div class="stat-label">รอเรียก</div><div class="stat-value" id="totWaiting">0</div></div>
+          </div>
+          <div class="stat">
+            <span class="stat-ic ic-blue"><i data-lucide="megaphone"></i></span>
+            <div class="stat-body"><div class="stat-label">กำลังเรียก / บริการ</div><div class="stat-value" id="totActive">0</div></div>
+          </div>
+          <div class="stat">
+            <span class="stat-ic ic-green"><i data-lucide="circle-check-big"></i></span>
+            <div class="stat-body"><div class="stat-label">เสร็จสิ้น</div><div class="stat-value" id="totDone">0</div></div>
+          </div>
+        </section>
+
+        <!-- สรุปต่อห้อง -->
+        <section class="mc-card">
+          <div class="section-head in-card">
+            <i data-lucide="door-open"></i>
+            <h2>สรุปต่อห้องวันนี้</h2>
+          </div>
+          <div class="mc-table-wrap">
+            <table class="mc-table rooms">
+              <thead>
+                <tr>
+                  <th>ห้อง</th>
+                  <th class="ta-c">รอเรียก</th>
+                  <th class="ta-c">กำลังเรียก/บริการ</th>
+                  <th class="ta-c">เสร็จสิ้น</th>
+                  <th class="ta-c">ข้าม/ยกเลิก</th>
+                  <th class="ta-c">ออกบัตร</th>
+                </tr>
+              </thead>
+              <tbody id="roomsBody">
+                <tr><td colspan="6" class="empty">กำลังโหลด…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- กิจกรรมเรียลไทม์ -->
+        <section class="mc-card feed-card">
+          <div class="section-head in-card feed-head">
+            <i data-lucide="activity"></i>
+            <h2>กิจกรรมเรียลไทม์</h2>
+            <span class="feed-live"><span class="feed-live-dot"></span>LIVE</span>
+          </div>
+          <ul class="feed" id="feedList">
+            <li class="feed-empty" id="feedEmpty">
+              <i data-lucide="radio"></i>
+              <span>กำลังรอเหตุการณ์… ออกคิว / เรียกคิว / เรียกข้าม / เสร็จสิ้น จะแสดงที่นี่ทันที</span>
+            </li>
+          </ul>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/shared/vendor/lucide.min.js"></script>
+  <script src="/shared/common.js"></script>
+  <script src="/hub/app.js"></script>
+</body>
+</html>

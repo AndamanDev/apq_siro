@@ -1,0 +1,45 @@
+{
+  "name": "kiosk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Queue 2026 Kiosk (Electron + ESC/POS thermal printer)",
+  "author": "Queue 2026",
+  "main": "main.js",
+  "scripts": {
+    "start": "start-kiosk.cmd",
+    "start:raw": "electron .",
+    "build": "electron-builder --win"
+  },
+  "dependencies": {
+    "node-thermal-printer": "^4.4.4",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.queue2026.kiosk",
+    "productName": "Queue2026Kiosk",
+    "electronVersion": "31.7.7",
+    "npmRebuild": false,
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Queue2026Kiosk"
+    },
+    "files": [
+      "**/*",
+      "!make-icon.ps1",
+      "!dist${/*}"
+    ]
+  }
+}

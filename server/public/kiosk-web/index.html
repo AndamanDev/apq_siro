@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kiosk รับบัตรคิว — SiRO</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="kiosk">
+    <header class="siro-header">
+      <div class="brand-left">SIRIRAJ RADIATION ONCOLOGY</div>
+      <div class="brand-right">
+        <img class="siro-logo" src="Kiosk_logo.png" alt="SiRO รังสีรักษาศิริราช" />
+      </div>
+    </header>
+
+    <main>
+      <!-- เมนูหลัก -->
+      <section class="screen" id="menuScreen">
+        <h1 class="page-title">กรุณาเลือกรายการรับบริการ</h1>
+        <div class="menu-body">
+          <img class="machine" src="kiosk_logo2.png" alt="เครื่องฉายรังสี" />
+          <div class="room-buttons" id="kRooms"></div>
+        </div>
+      </section>
+
+      <!-- หน้าห้อง: เลือกช่วงเวลา -->
+      <section class="screen hidden" id="roomScreen">
+        <button class="back" id="kBack">‹ กลับ</button>
+        <h1 class="page-title" id="kRoomTitle">เครื่องฉายรังสี</h1>
+        <div class="slot-section">
+          <div class="slot-label">ในเวลาทำการ</div>
+          <div class="slot-cards">
+            <div class="slot-card inwork" id="slotMorning"></div>
+            <div class="slot-card inwork" id="slotAfternoon"></div>
+          </div>
+        </div>
+        <div class="slot-section">
+          <div class="slot-label">คลินิกนอกเวลา</div>
+          <div class="slot-card wide inwork" id="slotAfter"></div>
+        </div>
+      </section>
+    </main>
+
+    <div class="overlay hidden" id="printing">
+      <div class="print-card">
+        <div class="spinner"></div>
+        <div class="ptxt" id="ptxt">กำลังพิมพ์บัตรคิว...</div>
+        <div class="pnum" id="pNum"></div>
+      </div>
+    </div>
+    <div class="hint">โหมดทดสอบบนเบราว์เซอร์ — เครื่องจริงใช้โปรแกรม Kiosk (Electron) เพื่อพิมพ์บัตร</div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/shared/common.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

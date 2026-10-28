@@ -1,0 +1,322 @@
+/* ============================================================
+   MediCore CPOE — Unified Design Tokens
+   ยึดตาม ipd_app Design System + Light Mode สำหรับ OPD/Admin
+   (คัดลอกมาจาก medflow_ipd เพื่อใช้ใน queue_2026 hub)
+   ============================================================ */
+
+/* ฟอนต์โหลดจากเครื่อง (offline) ผ่าน /shared/fonts.css — ไม่พึ่ง Google Fonts CDN */
+
+/* ══════════════ DARK THEME (Default — IPD/Ward/Nursing) ══════════════ */
+:root,
+[data-theme="dark"] {
+  /* Core Palette */
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-card: rgba(17, 24, 39, 0.8);
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --bg-glass-hover: rgba(255, 255, 255, 0.08);
+  --bg-page: #0a0e1a;
+
+  /* Surfaces */
+  --surface-1: #1e2537;
+  --surface-2: #252d3f;
+  --surface-3: #2e3750;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-highlight: rgba(255, 255, 255, 0.15);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  /* Text */
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-accent: #60a5fa;
+  --text-inverse: #0a0e1a;
+
+  /* Form */
+  --input-bg: #1e2537;
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-focus-ring: rgba(59, 130, 246, 0.2);
+  --input-placeholder: #475569;
+
+  /* Scrollbar */
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #2e3750;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+  --shadow-glow-blue: 0 0 20px rgba(59,130,246,0.15);
+  --shadow-glow-red: 0 0 20px rgba(239,68,68,0.2);
+  --shadow-glow-green: 0 0 20px rgba(16,185,129,0.15);
+
+  /* Modal */
+  --overlay-bg: rgba(0,0,0,0.6);
+  --overlay-blur: blur(4px);
+}
+
+/* ══════════════ LIGHT THEME (OPD/Admin/Doctor/Pharmacy) ══════════════ */
+[data-theme="light"] {
+  /* Core Palette */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-glass: rgba(0, 0, 0, 0.02);
+  --bg-glass-hover: rgba(0, 0, 0, 0.04);
+  --bg-page: #f0f2f5;
+
+  /* Surfaces */
+  --surface-1: #f1f5f9;
+  --surface-2: #e2e8f0;
+  --surface-3: #cbd5e1;
+  --border-color: #e2e8f0;
+  --border-highlight: #cbd5e1;
+  --border-subtle: #f1f5f9;
+
+  /* Text */
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --text-accent: #2563eb;
+  --text-inverse: #f1f5f9;
+
+  /* Form */
+  --input-bg: #f8fafc;
+  --input-border: #e2e8f0;
+  --input-focus-ring: rgba(0, 104, 255, 0.12);
+  --input-placeholder: #94a3b8;
+
+  /* Scrollbar */
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: #cbd5e1;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 12px 28px rgba(0,0,0,0.12);
+  --shadow-glow-blue: 0 4px 12px rgba(0,104,255,0.15);
+  --shadow-glow-red: 0 4px 12px rgba(255,59,48,0.15);
+  --shadow-glow-green: 0 4px 12px rgba(0,179,122,0.15);
+
+  /* Modal */
+  --overlay-bg: rgba(0,0,0,0.3);
+  --overlay-blur: blur(2px);
+}
+
+/* ══════════════ SHARED TOKENS (ใช้ร่วมทั้ง Dark & Light) ══════════════ */
+:root {
+  /* ── Accent Colors (Tailwind-based, เหมือน ipd_app) ── */
+  --accent-blue: #3b82f6;
+  --accent-blue-hover: #2563eb;
+  --accent-blue-glow: rgba(59, 130, 246, 0.3);
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --accent-emerald-hover: #059669;
+  --accent-amber: #f59e0b;
+  --accent-rose: #f43f5e;
+  --accent-rose-hover: #e11d48;
+  --accent-violet: #8b5cf6;
+  --accent-indigo: #6366f1;
+  --accent-orange: #f97316;
+
+  /* ── Status Colors ── */
+  --status-stable: #10b981;
+  --status-attention: #f59e0b;
+  --status-critical: #ef4444;
+  --status-away: #06b6d4;
+  --status-empty: rgba(128, 128, 128, 0.2);
+
+  /* ── Priority Colors ── */
+  --priority-stat: #ef4444;
+  --priority-urgent: #f97316;
+  --priority-routine: #3b82f6;
+  --priority-scheduled: #10b981;
+
+  /* ── CPOE Order Category Colors ── */
+  --cat-med: #3b82f6;
+  --cat-lab: #8b5cf6;
+  --cat-radiology: #06b6d4;
+  --cat-procedure: #f97316;
+  --cat-consult: #6366f1;
+  --cat-nursing: #10b981;
+  --cat-diet: #f59e0b;
+  --cat-referral: #ec4899;
+
+  /* ── CPOE Status Colors ── */
+  --cpoe-draft: #94a3b8;
+  --cpoe-hold: #f59e0b;
+  --cpoe-active: #3b82f6;
+  --cpoe-completed: #10b981;
+  --cpoe-cancelled: #ef4444;
+  --cpoe-verified: #8b5cf6;
+  --cpoe-dispensed: #06b6d4;
+
+  /* ── EWS (Early Warning Score) ── */
+  --ews-low: #10b981;
+  --ews-medium: #f59e0b;
+  --ews-high: #ef4444;
+
+  /* ── Triage (ER) ── */
+  --triage-1: #ef4444;   /* Resuscitation */
+  --triage-2: #f97316;   /* Emergency */
+  --triage-3: #f59e0b;   /* Urgent */
+  --triage-4: #10b981;   /* Semi-urgent */
+  --triage-5: #3b82f6;   /* Non-urgent */
+
+  /* ── Drug Flags ── */
+  --drug-high-alert: #ef4444;
+  --drug-narcotic: #8b5cf6;
+  --drug-antibiotic: #10b981;
+  --drug-lasa: #f97316;
+  --drug-ned: #f59e0b;
+
+  /* ── Encounter Source ── */
+  --source-opd: #3b82f6;
+  --source-er: #ef4444;
+  --source-ipd: #10b981;
+
+  /* ── Typography (ฟอนต์ในเครื่อง + สเกลใหญ่ขึ้นให้อ่านง่าย) ── */
+  --font-main: 'Sarabun', 'Prompt', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Cascadia Code', 'Consolas', ui-monospace, monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 12px;
+  --font-size-base: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 22px;
+  --font-size-2xl: 26px;
+  --font-size-3xl: 34px;
+
+  /* ── Spacing ── */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+
+  /* ── Border Radius ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 50%;
+  --radius-pill: 9999px;
+
+  /* ── Transitions ── */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Layout ── */
+  --sidebar-w: 72px;
+  --sidebar-w-expanded: 240px;
+  --header-h: 56px;
+  --topbar-h: 54px;
+
+  /* ── Z-Index Scale ── */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-drawer: 900;
+  --z-drawer-overlay: 890;
+  --z-modal: 1000;
+  --z-modal-overlay: 990;
+  --z-toast: 2000;
+  --z-tooltip: 3000;
+}
+
+/* ══════════════ RESET & BASE ══════════════ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a { color: var(--accent-blue); text-decoration: none; cursor: pointer; }
+a:hover { color: var(--accent-blue-hover); }
+
+/* ── Scrollbar (Dark/Light aware) ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { opacity: 0.8; }
+
+/* ══════════════ ANIMATIONS ══════════════ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(239,68,68,0.3); }
+  50% { box-shadow: 0 0 20px rgba(239,68,68,0.6); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ══════════════ UTILITY CLASSES ══════════════ */
+.text-primary { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.text-accent { color: var(--text-accent); }
+.text-success { color: var(--accent-emerald); }
+.text-warning { color: var(--accent-amber); }
+.text-danger { color: var(--accent-rose); }
+
+.bg-glass { background: var(--bg-glass); backdrop-filter: blur(12px); }
+
+.font-mono { font-family: var(--font-mono); }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+
+.uppercase { text-transform: uppercase; letter-spacing: 0.5px; }
+.truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.gap-xs { gap: var(--space-xs); }
+.gap-sm { gap: var(--space-sm); }
+.gap-md { gap: var(--space-md); }
+.gap-lg { gap: var(--space-lg); }
+
+.hidden { display: none !important; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }

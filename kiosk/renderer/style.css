@@ -1,0 +1,81 @@
+@font-face{ font-family:'Prompt'; font-weight:300; font-display:swap; src:url('fonts/Prompt-Light.ttf') format('truetype'); }
+@font-face{ font-family:'Prompt'; font-weight:400; font-display:swap; src:url('fonts/Prompt-Regular.ttf') format('truetype'); }
+@font-face{ font-family:'Prompt'; font-weight:500; font-display:swap; src:url('fonts/Prompt-Medium.ttf') format('truetype'); }
+@font-face{ font-family:'Prompt'; font-weight:600; font-display:swap; src:url('fonts/Prompt-SemiBold.ttf') format('truetype'); }
+@font-face{ font-family:'Prompt'; font-weight:700; font-display:swap; src:url('fonts/Prompt-Bold.ttf') format('truetype'); }
+* { box-sizing:border-box; margin:0; padding:0; user-select:none; }
+:root{
+  --blue:#1c50b5; --green:#1aa54e; --ink:#16335f; --grey-border:#cfd6e0; --card-bg:#eceef1;
+  --room:#1c50b5;
+  --font:'Prompt','Leelawadee UI','Noto Sans Thai','Tahoma',sans-serif;
+}
+html,body{ height:100%; }
+body{ font-family:var(--font); background:#fff; color:var(--ink); overflow:hidden; cursor:none; }
+
+/* เต็มหน้าต่างแนวตั้ง 768 x 1024 */
+.kiosk{ width:100vw; height:100vh; background:#fff; overflow:hidden; position:relative; display:flex; flex-direction:column; }
+
+.siro-header{ display:flex; justify-content:space-between; align-items:center; height:170px; flex:0 0 auto; padding-right:30px; }
+.brand-left{ background:var(--blue); color:#fff; font-family:'Arial',sans-serif; font-weight:700; letter-spacing:.3px;
+  font-size:22px; line-height:1.2; white-space:nowrap; align-self:flex-start; height:138px; display:flex; align-items:center; padding:0 30px 0 28px; border-radius:0 0 40px 0; box-shadow:0 14px 30px rgba(20,40,80,.38); }
+.brand-right{ display:flex; align-items:center; }
+.siro-logo{ height:158px; width:auto; display:block; }
+
+main{ flex:1; display:flex; flex-direction:column; padding:6px 36px 26px; min-height:0; }
+.screen{ flex:1; display:flex; flex-direction:column; min-height:0; }
+.hidden{ display:none !important; }
+.page-title{ text-align:center; color:var(--blue); font-size:38px; font-weight:300; margin:16px 0 30px; }
+
+.menu-body{ flex:1; display:flex; flex-direction:row; align-items:center; justify-content:center; gap:40px; transform:translateY(-20%); }
+.machine{ width:430px; height:430px; max-width:46%; object-fit:contain; flex:0 1 auto; }
+.room-buttons{ display:flex; flex-direction:column; gap:34px; }
+.room-btn{ border:none; cursor:pointer; color:#fff; font-family:var(--font); font-weight:300; font-size:30px;
+  padding:0 26px; width:300px; height:104px; display:flex; align-items:center; justify-content:center; text-align:center;
+  border-radius:24px; box-shadow:0 10px 22px rgba(20,40,80,.14); }
+.room-btn:active{ transform:translateY(3px); }
+
+.back{ position:absolute; top:198px; left:22px; background:none; border:2px solid #d3dae6; color:#5b6b86;
+  padding:8px 16px; border-radius:10px; font-size:16px; cursor:pointer; z-index:5; }
+.slot-section{ margin-bottom:18px; }
+.slot-label{ font-size:26px; font-weight:300; margin:4px 2px 12px; color:var(--ink); }
+.slot-cards{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+.slot-card{ border:2px solid var(--grey-border); background:var(--card-bg); border-radius:18px; padding:18px; display:flex; flex-direction:column; gap:14px; }
+.slot-card.inwork{ border-color:var(--room); }
+.slot-card.wide{ display:grid; grid-template-columns:1fr 1fr; gap:14px 22px; }
+.slot-btn{ border:none; cursor:pointer; color:#fff; background:var(--room); font-family:var(--font); font-weight:300;
+  font-size:22px; padding:16px 10px; border-radius:10px; box-shadow:0 3px 8px rgba(20,40,80,.18); }
+.slot-btn:active{ transform:translateY(2px); filter:brightness(.92); }
+
+.overlay{ position:absolute; inset:0; background:rgba(255,255,255,.95); display:flex; align-items:center; justify-content:center; z-index:50; }
+.print-card{ text-align:center; }
+.ptxt{ font-size:32px; margin-top:28px; color:var(--blue); font-weight:400; }
+.pnum{ font-size:64px; font-weight:500; color:var(--green); margin-top:16px; letter-spacing:2px; }
+.spinner{ width:90px; height:90px; border:11px solid #dce3ef; border-top-color:var(--blue); border-radius:50%; margin:0 auto; animation:spin 1s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+.offline{ position:absolute; top:0; left:0; right:0; background:#ff6b6b; color:#fff; text-align:center; padding:8px; z-index:80; font-weight:400; }
+
+/* ===== จุดแตะลับมุมซ้ายบน (โปร่งใส) — z ต่ำกว่า overlay เพื่อไม่ขวางตอนเปิด panel ===== */
+.corner-tap{ position:absolute; top:0; left:0; width:90px; height:90px; z-index:40; background:transparent; }
+
+/* ===== หน้าตั้งค่าระบบ kiosk ===== */
+#sysPanel{ cursor:auto; }
+#sysPanel *{ cursor:auto; }
+.sys-card{ background:#fff; border:1px solid var(--grey-border); border-radius:22px; padding:30px 34px;
+  width:560px; max-width:92%; box-shadow:0 20px 50px rgba(20,40,80,.25); }
+.sys-card h2{ color:var(--blue); font-weight:500; font-size:30px; margin-bottom:22px; text-align:center; }
+.sfield{ display:flex; flex-direction:column; gap:8px; margin-bottom:18px; }
+.sfield > span{ font-size:20px; color:var(--ink); font-weight:500; }
+.sfield input, .sfield select{ font-family:var(--font); font-size:22px; padding:12px 14px;
+  border:2px solid var(--grey-border); border-radius:12px; background:#fff; color:var(--ink); width:100%; }
+.sfield input:focus, .sfield select:focus{ outline:none; border-color:var(--blue); }
+.sfield small{ font-size:15px; color:#7a8aa3; }
+.smsg{ min-height:24px; font-size:18px; color:var(--green); text-align:center; margin:2px 0 14px; }
+.smsg.err{ color:#d23030; }
+.sbtns{ display:flex; gap:14px; }
+.sbtn{ flex:1; font-family:var(--font); font-size:22px; font-weight:500; padding:14px 10px;
+  border-radius:14px; border:2px solid var(--grey-border); background:#fff; color:var(--ink); cursor:pointer; }
+.sbtn.primary{ background:var(--blue); border-color:var(--blue); color:#fff; }
+.sbtn.sec{ color:#5b6b86; }
+.sbtn:active{ transform:translateY(2px); }
+.shint{ text-align:center; font-size:14px; color:#9aa6bb; margin-top:16px; }

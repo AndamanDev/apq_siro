@@ -1,0 +1,60 @@
+@font-face{ font-family:'Sarabun'; font-weight:400; font-display:swap; src:url('/fonts/Sarabun-Regular.ttf') format('truetype'); }
+@font-face{ font-family:'Sarabun'; font-weight:600; font-display:swap; src:url('/fonts/Sarabun-SemiBold.ttf') format('truetype'); }
+@font-face{ font-family:'Sarabun'; font-weight:700; font-display:swap; src:url('/fonts/Sarabun-Bold.ttf') format('truetype'); }
+* { box-sizing:border-box; margin:0; padding:0; }
+:root{
+  --blue:#1c50b5; --green:#1aa54e; --ink:#16335f; --grey-border:#cfd6e0; --card-bg:#eceef1;
+  --room:#1c50b5;
+  --font:'Sarabun','Leelawadee UI','Noto Sans Thai','Tahoma',sans-serif;
+}
+html,body{ height:100%; }
+body{ font-family:var(--font); background:#5a6b85; color:var(--ink);
+  display:flex; align-items:center; justify-content:center; }
+
+/* จอ kiosk แนวตั้ง 768 x 1024 */
+.kiosk{ width:768px; height:1024px; background:#fff; overflow:hidden; position:relative;
+  display:flex; flex-direction:column; box-shadow:0 10px 40px rgba(0,0,0,.4); }
+
+/* ---------- header (โลโก้ใหญ่ 2 เท่า) ---------- */
+.siro-header{ display:flex; justify-content:space-between; align-items:center; height:170px; flex:0 0 auto; padding-right:30px; }
+.brand-left{ background:var(--blue); color:#fff; font-family:'Arial',sans-serif; font-weight:700; letter-spacing:.3px;
+  font-size:22px; line-height:1.2; white-space:nowrap; height:100%; display:flex; align-items:center; padding:0 30px 0 28px; border-radius:0 0 40px 0; }
+.brand-right{ display:flex; align-items:center; }
+.siro-logo{ height:158px; width:auto; display:block; }   /* ~2x ของเดิม */
+
+main{ flex:1; display:flex; flex-direction:column; padding:6px 36px 26px; min-height:0; }
+.screen{ flex:1; display:flex; flex-direction:column; min-height:0; }
+.hidden{ display:none !important; }
+.page-title{ text-align:center; color:var(--blue); font-size:38px; font-weight:700; margin:40px 0 30px; }
+
+/* ---------- menu ---------- */
+.menu-body{ flex:1; display:flex; align-items:center; justify-content:center; gap:30px; padding-bottom:90px; }
+.machine{ width:350px; height:350px; object-fit:contain; flex:0 0 auto; }
+.room-buttons{ display:flex; flex-direction:column; gap:34px; }
+.room-btn{ border:none; cursor:pointer; color:#fff; font-family:var(--font); font-weight:700; font-size:30px;
+  padding:44px 30px; width:320px; border-radius:24px; box-shadow:0 10px 22px rgba(20,40,80,.14); transition:transform .08s; }
+.room-btn:active{ transform:translateY(3px); }
+
+/* ---------- room / slots ---------- */
+.back{ position:absolute; top:182px; left:22px; background:none; border:2px solid #d3dae6; color:#5b6b86;
+  padding:8px 16px; border-radius:10px; font-size:16px; cursor:pointer; z-index:5; }
+.slot-section{ margin-bottom:18px; }
+.slot-label{ font-size:26px; font-weight:700; margin:4px 2px 12px; color:var(--ink); }
+.slot-cards{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+.slot-card{ border:2px solid var(--grey-border); background:var(--card-bg); border-radius:18px; padding:18px;
+  display:flex; flex-direction:column; gap:14px; }
+.slot-card.inwork{ border-color:var(--room); }
+.slot-card.wide{ display:grid; grid-template-columns:1fr 1fr; gap:14px 22px; }
+.slot-btn{ border:none; cursor:pointer; color:#fff; background:var(--room); font-family:var(--font); font-weight:600;
+  font-size:22px; padding:16px 10px; border-radius:10px; box-shadow:0 3px 8px rgba(20,40,80,.18);
+  transition:transform .08s, filter .1s; }
+.slot-btn:active{ transform:translateY(2px); filter:brightness(.92); }
+
+/* ---------- printing popup ---------- */
+.overlay{ position:absolute; inset:0; background:rgba(255,255,255,.95); display:flex; align-items:center; justify-content:center; z-index:50; }
+.print-card{ text-align:center; }
+.ptxt{ font-size:32px; margin-top:28px; color:var(--blue); font-weight:700; }
+.pnum{ font-size:64px; font-weight:800; color:var(--green); margin-top:16px; letter-spacing:2px; }
+.spinner{ width:90px; height:90px; border:11px solid #dce3ef; border-top-color:var(--blue); border-radius:50%; margin:0 auto; animation:spin 1s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.hint{ position:absolute; bottom:6px; width:100%; text-align:center; color:#9aa7bd; font-size:12px; }

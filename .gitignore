@@ -1,0 +1,13 @@
+node_modules/
+server/data/*.db
+server/data/*.db-shm
+server/data/*.db-wal
+server/assets/media/*
+server/assets/logos/*
+!server/assets/media/.gitkeep
+!server/assets/logos/.gitkeep
+kiosk/config.json
+kiosk/tickets-pdf/*.pdf
+dist/
+*.log
+.DS_Store

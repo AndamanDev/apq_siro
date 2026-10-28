@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>วิธีติดตั้งระบบคิว APQueue ใช้งานจริง (หลายเครื่อง)</title>
+<style>
+  :root{
+    --green:#1aa54e; --blue:#1c50b5; --ink:#1f2937; --muted:#6b7280;
+    --line:#e5e7eb; --bg:#f6f8fb; --card:#ffffff;
+    --warn-bg:#fff7ed; --warn-bd:#fdba74; --warn-ink:#9a3412;
+    --tip-bg:#eff6ff; --tip-bd:#93c5fd; --tip-ink:#1e40af;
+    --code-bg:#0f172a; --code-ink:#e2e8f0;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Sarabun","Segoe UI Variable","Segoe UI",Tahoma,sans-serif;
+    line-height:1.7; font-size:16px;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:24px; display:grid;
+    grid-template-columns:260px 1fr; gap:28px; align-items:start;}
+
+  /* Sidebar / TOC */
+  aside{position:sticky; top:24px; align-self:start;}
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px;}
+  .toc h2{font-size:14px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin:0 0 10px;}
+  .toc a{display:block; color:var(--ink); text-decoration:none; padding:6px 10px; border-radius:8px; font-size:15px;}
+  .toc a:hover{background:var(--bg);}
+  .toc a.sub{padding-left:22px; font-size:14px; color:var(--muted);}
+
+  /* Header */
+  header.hero{
+    background:linear-gradient(135deg,var(--blue),var(--green)); color:#fff;
+    border-radius:16px; padding:30px 32px; margin-bottom:22px;
+  }
+  header.hero h1{margin:0 0 6px; font-size:27px; line-height:1.35;}
+  header.hero p{margin:0; opacity:.92;}
+
+  main{min-width:0;}
+  section.card{background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:26px 30px; margin-bottom:20px;}
+  section.card > h2{margin-top:0; font-size:22px; padding-bottom:10px; border-bottom:2px solid var(--line);}
+  h3{font-size:18px; margin:22px 0 8px;}
+  p{margin:8px 0;}
+  ul,ol{margin:8px 0; padding-left:24px;}
+  li{margin:5px 0;}
+  a{color:var(--blue);}
+
+  .step{counter-reset:none;}
+  .badge{display:inline-block; min-width:30px; text-align:center; background:var(--blue); color:#fff;
+    border-radius:8px; padding:2px 9px; font-weight:700; margin-right:8px; font-size:14px;}
+
+  /* Tables */
+  table{width:100%; border-collapse:collapse; margin:14px 0; font-size:15px; overflow:hidden; border-radius:10px;}
+  th,td{border:1px solid var(--line); padding:9px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--bg); font-weight:700;}
+  tbody tr:nth-child(even){background:#fafbfc;}
+
+  /* Code */
+  code{background:#eef2f7; padding:1px 6px; border-radius:5px; font-family:"Cascadia Code",Consolas,monospace; font-size:14px;}
+  pre{background:var(--code-bg); color:var(--code-ink); padding:14px 16px; border-radius:10px; overflow-x:auto;
+    margin:12px 0; font-size:13.5px; line-height:1.55;}
+  pre code{background:none; padding:0; color:inherit;}
+
+  /* Callouts */
+  .note{border-radius:10px; padding:12px 16px; margin:14px 0; border:1px solid;}
+  .note.tip{background:var(--tip-bg); border-color:var(--tip-bd); color:var(--tip-ink);}
+  .note.warn{background:var(--warn-bg); border-color:var(--warn-bd); color:var(--warn-ink);}
+  .note strong{font-weight:700;}
+
+  /* Diagram */
+  .diagram{background:#0b1220; color:#cbd5e1; border-radius:12px; padding:18px 20px; font-family:"Cascadia Code",Consolas,monospace;
+    font-size:13px; line-height:1.5; white-space:pre; overflow-x:auto;}
+  .diagram b{color:#7dd3fc;}
+
+  /* System overview figure */
+  figure.sysfig{margin:0 0 20px; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;}
+  figure.sysfig img{display:block; width:100%; height:auto;}
+  figure.sysfig figcaption{padding:10px 16px; font-size:14px; color:var(--muted);
+    border-top:1px solid var(--line); background:var(--bg);}
+
+  /* Roles cards */
+  .roles{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:16px 0;}
+  .role{border:1px solid var(--line); border-radius:12px; padding:16px; background:#fcfdff;}
+  .role .tag{display:inline-block; font-size:12px; font-weight:700; padding:2px 10px; border-radius:999px; color:#fff; margin-bottom:8px;}
+  .role h4{margin:0 0 6px; font-size:16px;}
+  .role p{margin:0; font-size:14px; color:var(--muted);}
+  .tag.a{background:var(--blue);} .tag.b{background:var(--green);} .tag.c{background:#7c3aed;}
+
+  /* Checklist */
+  .check{list-style:none; padding-left:0;}
+  .check li{padding-left:34px; position:relative; margin:9px 0;}
+  .check li::before{content:""; position:absolute; left:0; top:3px; width:20px; height:20px;
+    border:2px solid var(--green); border-radius:5px;}
+
+  .kbd{display:inline-block; background:#fff; border:1px solid #cbd5e1; border-bottom-width:2px;
+    border-radius:6px; padding:1px 7px; font-family:Consolas,monospace; font-size:13px;}
+
+  footer{color:var(--muted); font-size:13px; text-align:center; padding:18px;}
+
+  @media (max-width:920px){
+    .wrap{grid-template-columns:1fr;}
+    aside{position:static;}
+  }
+  @media print{
+    body{background:#fff;}
+    aside{display:none;}
+    .wrap{display:block; max-width:none; padding:0;}
+    section.card,header.hero{break-inside:avoid; box-shadow:none;}
+    header.hero{color:#000; background:#fff; border:2px solid var(--blue);}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <aside>
+    <nav class="toc">
+      <h2>สารบัญ</h2>
+      <a href="#overview">0. ภาพรวมระบบ</a>
+      <a href="#serverA">A. เครื่องแม่ข่าย + Kiosk</a>
+      <a class="sub" href="#serverA">A1–A7 ขั้นตอน</a>
+      <a href="#displayB">B. เครื่องจอแสดงผล + เสียง</a>
+      <a href="#roomC">C. เครื่องประจำห้อง (เรียกคิว)</a>
+      <a href="#adminD">D. ตั้งค่าระบบครั้งแรก</a>
+      <a href="#troubleE">E. แก้ปัญหา</a>
+      <a href="#checklist">✓ Checklist ก่อนเปิดใช้</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="hero">
+      <h1>วิธีติดตั้งระบบคิว APQueue ใช้งานจริง (หลายเครื่อง)</h1>
+      <p>คู่มือติดตั้งระบบคิวที่หน้างานจริง โดยกระจายเป็น 3 บทบาทเครื่อง บนวง LAN เดียวกัน</p>
+    </header>
+
+    <!-- 0 OVERVIEW -->
+    <section class="card" id="overview">
+      <h2>0. ภาพรวม: อะไรอยู่เครื่องไหน</h2>
+
+      <figure class="sysfig">
+        <img src="pic/system-overview-kiosk.png" alt="ภาพรวมระบบคิว APQueue — Touch Screen Kiosk: เครื่องกดบัตรคิว, Mini PC + จอแสดงผล (HDMI), และแท็บเล็ตเรียกคิวประจำห้องบนวง LAN/Wi-Fi" />
+        <figcaption>ภาพรวมระบบคิว APQueue — เครื่องกดบัตรคิว (Kiosk) → Mini PC แสดงผลออกจอผ่าน HDMI และแท็บเล็ตเรียกคิวประจำห้องเชื่อมผ่าน LAN/Wi-Fi</figcaption>
+      </figure>
+
+      <div class="diagram">        <b>เครื่อง A : แม่ข่าย (server) + Kiosk ในตัว</b>
+        ├─ รันโปรแกรมหลัก (Node.js) พอร์ต 8888   ← หัวใจของระบบ
+        ├─ เก็บฐานข้อมูลคิวทั้งหมด (server/data/queue.db)
+        ├─ เสิร์ฟทุกหน้าเว็บให้เครื่องอื่น
+        └─ ต่อเครื่องพิมพ์ความร้อน (USB) พิมพ์บัตรคิว
+                               │
+                        วง LAN เดียวกัน (เช่น 192.168.1.x)
+        ┌──────────────────────┴────────────────────────┐
+   <b>เครื่อง B : จอแสดงผล + เสียง</b>          <b>เครื่อง C, D... : ประจำห้อง</b>
+   ทีวี/จอ เปิด Chrome เต็มจอ              คอมเจ้าหน้าที่แต่ละห้อง
+   .../display/  + เสียงเรียกอัตโนมัติ      .../calling  ล็อกอิน เลือกห้อง กดเรียก</div>
+
+      <div class="roles">
+        <div class="role"><span class="tag a">เครื่อง A</span><h4>แม่ข่าย + Kiosk</h4><p>รันโปรแกรมหลัก + ฐานข้อมูล + พิมพ์บัตรคิว — มีเครื่องเดียว</p></div>
+        <div class="role"><span class="tag b">เครื่อง B</span><h4>จอแสดงผล + เสียง</h4><p>เปิด Chrome เต็มจอแสดงคิว + เสียงเรียก — ตั้งทุกจอ</p></div>
+        <div class="role"><span class="tag c">เครื่อง C…</span><h4>ประจำห้อง</h4><p>คอมเจ้าหน้าที่เรียกคิวประจำห้อง — ตั้งทุกห้อง</p></div>
+      </div>
+
+      <table>
+        <thead><tr><th>สิ่งที่ทำ</th><th>ทำที่เครื่องไหน</th><th>ทำซ้ำทุกเครื่อง?</th></tr></thead>
+        <tbody>
+          <tr><td>รันโปรแกรมหลัก + ฐานข้อมูล</td><td>เครื่อง A (server)</td><td>ไม่ — เครื่องเดียว</td></tr>
+          <tr><td>พิมพ์บัตรคิว (Kiosk)</td><td>เครื่อง A (ในตัว)</td><td>ไม่</td></tr>
+          <tr><td>แสดงจอคิว + เสียงเรียก</td><td>เครื่อง B</td><td>ใช่ — ทุกจอ</td></tr>
+          <tr><td>เรียกคิวประจำห้อง</td><td>เครื่อง C, D…</td><td>ใช่ — ทุกห้อง</td></tr>
+          <tr><td>ตั้งค่าระบบ (ห้อง/เสียง/รหัสผ่าน)</td><td>เปิดผ่านเว็บจากเครื่องไหนก็ได้</td><td>ไม่ — ตั้งครั้งเดียวที่ฐานข้อมูล</td></tr>
+        </tbody>
+      </table>
+
+      <div class="note tip"><strong>สิ่งที่ต้องเตรียม:</strong> เครื่อง A 1 เครื่อง (สเปกทั่วไปพอ), เครื่องพิมพ์ความร้อน ESC/POS ต่อ USB, เครื่อง/จอแสดงผล, คอมประจำห้อง และ <strong>เราเตอร์/สวิตช์วงเดียวกัน</strong> — ทุกเครื่องต้องอยู่ LAN เดียวกัน</div>
+    </section>
+
+    <!-- A SERVER -->
+    <section class="card" id="serverA">
+      <h2>A. ติดตั้งเครื่องแม่ข่าย (server) + Kiosk — เครื่อง A</h2>
+
+      <h3><span class="badge">A1</span>ติดตั้ง Node.js 24</h3>
+      <p>ดาวน์โหลดและติดตั้งจาก <a href="https://nodejs.org">https://nodejs.org</a> (เลือกเวอร์ชัน <strong>24</strong> ขึ้นไป — ระบบใช้ฐานข้อมูลในตัวของ Node ที่ต้องใช้เวอร์ชันนี้)</p>
+      <p>ตรวจว่าติดตั้งสำเร็จ: เปิด <strong>Command Prompt</strong> พิมพ์</p>
+      <pre><code>node --version</code></pre>
+      <p>ต้องขึ้น <code>v24.x.x</code> (หรือสูงกว่า)</p>
+
+      <h3><span class="badge">A2</span>คัดลอกโฟลเดอร์โปรเจกต์มาวาง</h3>
+      <p>คัดลอกโฟลเดอร์ทั้งก้อน (<code>queue_2026</code>) มาวางที่เครื่อง A เช่น <code>C:\queue_2026</code></p>
+      <div class="note tip"><strong>เครื่องนี้ไม่มีอินเทอร์เน็ต?</strong> ให้คัดลอกโฟลเดอร์ <code>node_modules</code> (ที่รากโปรเจกต์) มาด้วย — ระบบนี้ไม่มีส่วนที่ต้องคอมไพล์ จึงคัดลอกใช้ข้ามเครื่องได้เลย<br>
+      <strong>เครื่องนี้มีอินเทอร์เน็ต?</strong> ข้ามได้ ตอนเปิดครั้งแรก <code>start-server.cmd</code> จะรัน <code>npm install</code> ให้เอง</div>
+
+      <h3><span class="badge">A3</span>ตั้งค่า IP ของเครื่อง server (สำคัญ)</h3>
+      <p>เครื่องอื่น (จอ/ห้อง) ต้องชี้มาที่ IP ของเครื่อง A ดังนั้นควรให้ IP <strong>คงที่ ไม่เปลี่ยน</strong></p>
+      <ul>
+        <li>หา IP ปัจจุบัน: เปิด Command Prompt พิมพ์ <code>ipconfig</code> ดูค่า <strong>IPv4 Address</strong> เช่น <code>192.168.1.50</code></li>
+        <li>แนะนำตั้งเป็น <strong>Static IP</strong> (Windows: Network Settings → IP assignment → Manual) หรือจองในเราเตอร์ (DHCP Reservation)</li>
+      </ul>
+      <div class="note tip">จด IP นี้ไว้ จะใช้ตั้งค่าเครื่องจอและเครื่องประจำห้อง — คู่มือนี้สมมุติใช้ <code>192.168.1.50</code></div>
+
+      <h3><span class="badge">A4</span>เปิดพอร์ต 8888 ใน Windows Firewall</h3>
+      <p>เปิด <strong>Command Prompt (Run as administrator)</strong> แล้ววางคำสั่ง:</p>
+      <pre><code>netsh advfirewall firewall add rule name="Queue2026 Server 8888" dir=in action=allow protocol=TCP localport=8888</code></pre>
+      <p>(หรือทำผ่านหน้าจอ: Windows Defender Firewall → Advanced → Inbound Rules → New Rule → Port → TCP 8888 → Allow)</p>
+
+      <h3><span class="badge">A5</span>เปิด server</h3>
+      <p>ดับเบิลคลิก <strong><code>start-server.cmd</code></strong> (อยู่ที่รากโปรเจกต์)</p>
+      <ul>
+        <li>ครั้งแรกจะสร้างฐานข้อมูลและข้อมูลตั้งต้นให้อัตโนมัติ (ห้อง L6/L8, ช่วงเวลา, ผู้ดูแล <code>admin</code>)</li>
+        <li>หน้าต่างจะแสดง <strong>IP ของเครื่องนี้</strong> พร้อมลิงก์สำหรับเครื่องจอ/เครื่องห้อง</li>
+        <li>ถ้า server หลุด จะเปิดใหม่ให้เองอัตโนมัติ</li>
+        <li>ทดสอบ: เปิดเบราว์เซอร์ที่เครื่อง A ไปที่ <code>http://localhost:8888</code> ต้องเห็นหน้าแดชบอร์ด</li>
+      </ul>
+
+      <h3><span class="badge">A6</span>ตั้งให้ server เปิดอัตโนมัติตอนเปิดเครื่อง</h3>
+      <ol>
+        <li>กด <span class="kbd">Win + R</span> พิมพ์ <code>shell:startup</code> แล้ว Enter → เปิดโฟลเดอร์ Startup</li>
+        <li>คลิกขวาที่ <code>start-server.cmd</code> → <strong>Create shortcut</strong></li>
+        <li>ลากไฟล์ทางลัดไปวางในโฟลเดอร์ Startup</li>
+      </ol>
+      <p>ครั้งต่อไปเปิด/รีสตาร์ตเครื่อง A → server จะเปิดเองอัตโนมัติ</p>
+
+      <h3><span class="badge">A7</span>ติดตั้ง Kiosk (พิมพ์บัตรคิว) บนเครื่อง A</h3>
+      <p>เครื่อง A ต่อเครื่องพิมพ์ความร้อนผ่าน <strong>USB</strong> และพิมพ์บัตรคิวให้ลูกค้า</p>
+
+      <p><strong>ขั้นที่ 1 — ติดตั้งเครื่องพิมพ์ใน Windows</strong></p>
+      <ul>
+        <li>ต่อสาย USB + ติดตั้ง driver ของเครื่องพิมพ์ความร้อน</li>
+        <li>Settings → Bluetooth &amp; devices → Printers → จด<strong>ชื่อเครื่องพิมพ์</strong> ที่ Windows ตั้งให้ (เช่น <code>POS-58</code> หรือ <code>EPSON TM-T82</code>)</li>
+      </ul>
+
+      <p><strong>ขั้นที่ 2 — ตั้งค่า Kiosk ให้ชี้เครื่องพิมพ์</strong></p>
+      <p>เปิดไฟล์ <code>kiosk\config.json</code> ด้วย Notepad แก้ให้เป็น (ใส่ชื่อเครื่องพิมพ์จริงแทน <code>&lt;ชื่อเครื่องพิมพ์&gt;</code>):</p>
+      <pre><code>{
+  "serverUrl": "http://localhost:8888",
+  "kioskId": "kiosk-1",
+  "fullscreen": true,
+  "width": 768,
+  "height": 1024,
+  "printer": {
+    "mode": "thermal",
+    "type": "epson",
+    "interface": "printer:&lt;ชื่อเครื่องพิมพ์&gt;",
+    "characterSet": "THAI",
+    "width": 48
+  }
+}</code></pre>
+      <ul>
+        <li><code>serverUrl</code> = <code>localhost</code> เพราะ Kiosk อยู่เครื่องเดียวกับ server</li>
+        <li><code>interface</code> รูปแบบ <code>printer:ชื่อเครื่องพิมพ์ใน Windows</code> (เครื่องพิมพ์ USB/แชร์)</li>
+        <li><code>type</code> ตามยี่ห้อ: <code>epson</code> / <code>star</code> / <code>brother</code> / <code>tanca</code> / <code>daruma</code></li>
+      </ul>
+
+      <p><strong>ขั้นที่ 3 — เปิด Kiosk</strong></p>
+      <p>ดับเบิลคลิก <code>kiosk\start-kiosk.cmd</code></p>
+      <ul>
+        <li>เปิดหน้าตั้งค่าเครื่องพิมพ์/ทดสอบพิมพ์: กด <span class="kbd">Ctrl + Shift + P</span></li>
+        <li>ออกจากแอป: กด <span class="kbd">Ctrl + Shift + Q</span></li>
+      </ul>
+
+      <p><strong>ขั้นที่ 4 — ตั้งเปิด Kiosk อัตโนมัติ</strong> (แบบเดียวกับ A6): สร้าง shortcut ของ <code>kiosk\start-kiosk.cmd</code> ไปวางใน <code>shell:startup</code></p>
+
+      <div class="note warn"><strong>ยังไม่มีเครื่องพิมพ์ ทดสอบก่อน?</strong> ตั้ง <code>"mode": "pdf"</code> แทน — บัตรจะถูกบันทึกเป็นไฟล์ PDF ในโฟลเดอร์ <code>kiosk\tickets-pdf</code><br>
+      <strong>ทางเลือก:</strong> มีตัวติดตั้งสำเร็จรูป <code>Queue2026Kiosk Setup 1.0.0.exe</code> แต่การแก้ค่าเครื่องพิมพ์หลังติดตั้งทำได้ไม่สะดวกเท่ารันจาก source ข้างต้น จึงแนะนำวิธีรันจาก source</div>
+    </section>
+
+    <!-- B DISPLAY -->
+    <section class="card" id="displayB">
+      <h2>B. ติดตั้งเครื่องจอแสดงผล + เสียงเรียก — เครื่อง B</h2>
+      <p>ทำตามคู่มือ <a href="วิธีตั้งค่าเครื่องจอแสดงผล.md">วิธีตั้งค่าเครื่องจอแสดงผล</a> โดยสรุป:</p>
+      <ol>
+        <li>ติดตั้ง <strong>Google Chrome</strong> (ถ้าไม่มีจะใช้ Edge แทนอัตโนมัติ)</li>
+        <li>คัดลอกไฟล์ <strong><code>start-display.cmd</code></strong> มาที่เครื่อง B (วางที่ Desktop ก็ได้)</li>
+        <li>เปิด <code>start-display.cmd</code> ด้วย Notepad แก้ URL ให้ชี้ไปที่ IP เครื่อง A:
+          <pre><code>set "URL=http://192.168.1.50:8888/display/"</code></pre>
+        </li>
+        <li>ดับเบิลคลิกเปิด → จอแสดงเต็มจอ + เสียงเรียกคิวเล่นได้ทันที (ไม่ต้องแตะจอ)</li>
+        <li>ตั้งเปิดอัตโนมัติ: สร้าง shortcut ไปวางใน <code>shell:startup</code></li>
+      </ol>
+      <div class="note tip">มีหลายจอ? เปิดจอที่ 2 ด้วย <code>start-display.cmd 2</code> (หรือไฟล์ <code>start-display-2.cmd</code>)</div>
+    </section>
+
+    <!-- C ROOM -->
+    <section class="card" id="roomC">
+      <h2>C. ตั้งค่าเครื่องประจำห้อง (เรียกคิว) — เครื่อง C, D, …</h2>
+      <p>เครื่องของเจ้าหน้าที่ประจำแต่ละห้อง ใช้เรียกคิวลูกค้า</p>
+      <ol>
+        <li>เปิดเบราว์เซอร์ (Chrome/Edge) ไปที่ IP เครื่อง A:
+          <pre><code>http://192.168.1.50:8888/calling</code></pre>
+        </li>
+        <li><strong>ล็อกอิน</strong> ด้วยผู้ใช้ที่กำหนด (ค่าตั้งต้น: <code>admin</code> / <code>123456</code> — ควรเปลี่ยน/สร้างผู้ใช้แยกในข้อ D)</li>
+        <li>เลือก <strong>"ห้องที่ประจำการ"</strong> ให้ตรงกับห้องของเครื่องนั้น</li>
+        <li>ใช้ปุ่ม: <strong>เรียกคิวถัดไป / เรียกซ้ำ / พักคิว / เสร็จสิ้น / ข้าม / ยกเลิก</strong></li>
+      </ol>
+      <div class="note tip"><strong>แนะนำ:</strong> สร้าง shortcut ของเบราว์เซอร์ที่เปิด URL <code>…/calling</code> ตรง ๆ วางที่ Desktop ของแต่ละเครื่องห้อง — เครื่องห้องไม่ต้องติดตั้งอะไรเพิ่ม ขอแค่อยู่ LAN เดียวกันและเปิดเว็บได้</div>
+    </section>
+
+    <!-- D ADMIN -->
+    <section class="card" id="adminD">
+      <h2>D. ตั้งค่าระบบครั้งแรก (ผู้ดูแล)</h2>
+      <p>เปิดจากเครื่องไหนก็ได้ผ่านเว็บ (ใช้ IP เครื่อง A):</p>
+      <table>
+        <thead><tr><th>หน้า</th><th>URL</th><th>ใช้ทำอะไร</th></tr></thead>
+        <tbody>
+          <tr><td>ตั้งค่า</td><td><code>http://192.168.1.50:8888/settings</code></td><td>เปลี่ยนรหัส <code>admin</code> / เพิ่มผู้ใช้, จัดการห้อง/ช่วงเวลา/โควตา, รูปแบบบัตรคิว, อัปโหลดเสียงเรียก &amp; โลโก้</td></tr>
+          <tr><td>แดชบอร์ด</td><td><code>http://192.168.1.50:8888/</code></td><td>ดูภาพรวมคิวทุกห้องแบบเรียลไทม์</td></tr>
+          <tr><td>รายงาน</td><td><code>http://192.168.1.50:8888/reports</code></td><td>ดู/ดาวน์โหลดรายงานคิว</td></tr>
+        </tbody>
+      </table>
+      <div class="note warn"><strong>ควรทำก่อนเปิดใช้จริง:</strong> เปลี่ยนรหัสผ่าน <code>admin</code> จากค่าตั้งต้น และตั้งชื่อ/สีห้องให้ตรงกับหน้างาน</div>
+    </section>
+
+    <!-- E TROUBLE -->
+    <section class="card" id="troubleE">
+      <h2>E. แก้ปัญหาเบื้องต้น</h2>
+      <table>
+        <thead><tr><th>อาการ</th><th>สาเหตุ / วิธีแก้</th></tr></thead>
+        <tbody>
+          <tr><td>เครื่องจอ/ห้องต่อ server ไม่ติด (หน้าว่าง)</td><td>1) server ยังไม่เปิด → เปิด <code>start-server.cmd</code> ที่เครื่อง A &nbsp; 2) IP ผิด → ตรวจ <code>ipconfig</code> เครื่อง A &nbsp; 3) Firewall บล็อก → ทำข้อ A4</td></tr>
+          <tr><td>เครื่อง A เองเปิด <code>localhost:8888</code> ไม่ได้</td><td>server ไม่ได้รัน หรือ Node ไม่ได้ติดตั้ง — ดูข้อความในหน้าต่าง <code>start-server.cmd</code></td></tr>
+          <tr><td>เปิด <code>start-server.cmd</code> แล้วเด้งปิด/ฟ้องไม่พบ Node</td><td>ยังไม่ได้ติดตั้ง Node 24 (ข้อ A1)</td></tr>
+          <tr><td>จอภาพขึ้นแต่ไม่มีเสียง</td><td>ต้องเปิดผ่าน <code>start-display.cmd</code> เท่านั้น (ไม่ใช่เปิดแท็บ Chrome ธรรมดา) — ดูคู่มือจอ</td></tr>
+          <tr><td>Kiosk พิมพ์ไม่ออก</td><td>ตรวจชื่อเครื่องพิมพ์ใน <code>interface</code> ให้ตรงกับชื่อใน Windows / เครื่องพิมพ์เปิดอยู่ / ลองกด <span class="kbd">Ctrl+Shift+P</span> ทดสอบพิมพ์</td></tr>
+          <tr><td>IP เครื่อง A เปลี่ยนเอง ทำเครื่องอื่นหลุด</td><td>ตั้ง Static IP หรือจอง DHCP Reservation (ข้อ A3)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- CHECKLIST -->
+    <section class="card" id="checklist">
+      <h2>✓ Checklist ก่อนเปิดใช้จริง</h2>
+      <ul class="check">
+        <li>เครื่อง A: ติดตั้ง Node 24, เปิด Firewall 8888, ตั้ง Static IP</li>
+        <li>เครื่อง A: <code>start-server.cmd</code> เปิดได้ + อยู่ใน Startup + เปิด <code>localhost:8888</code> เห็นแดชบอร์ด</li>
+        <li>เครื่องอื่นในวง เปิด <code>http://&lt;ip เครื่อง A&gt;:8888</code> ได้ (พิสูจน์ว่า LAN/Firewall ผ่าน)</li>
+        <li>เครื่อง A: Kiosk พิมพ์บัตรคิวออกจริง + อยู่ใน Startup</li>
+        <li>เครื่อง B: จอแสดงผลเต็มจอ + มีเสียงเมื่อกดเรียกคิว + อยู่ใน Startup</li>
+        <li>เครื่องห้องทุกห้อง: เปิด <code>/calling</code> เลือกห้องถูก กดเรียกแล้วเลขขึ้นที่จอแสดงผล</li>
+        <li>เปลี่ยนรหัสผ่าน <code>admin</code> + ตั้งค่าห้อง/เสียง/บัตรเรียบร้อย</li>
+      </ul>
+    </section>
+
+    <footer>ระบบคิว APQueue — เอกสารคู่มือติดตั้งใช้งานจริง · เปิดไฟล์นี้ด้วยเบราว์เซอร์ใดก็ได้ และสั่งพิมพ์ (Ctrl+P) เป็นกระดาษ/PDF ได้</footer>
+  </main>
+</div>
+</body>
+</html>

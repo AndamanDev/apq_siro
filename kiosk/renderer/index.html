@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kiosk รับบัตรคิว — SiRO</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="kiosk">
+    <!-- จุดแตะลับมุมซ้ายบน: แตะ 5 ครั้งเพื่อเปิดหน้าตั้งค่าระบบ (สำหรับผู้ดูแล) -->
+    <div class="corner-tap" id="cornerTap"></div>
+    <div class="offline hidden" id="offline">⚠ เชื่อมต่อเซิร์ฟเวอร์ไม่ได้</div>
+
+    <header class="siro-header">
+      <div class="brand-left">SIRIRAJ RADIATION ONCOLOGY</div>
+      <div class="brand-right">
+        <img class="siro-logo" src="Kiosk_logo.png" alt="SiRO รังสีรักษาศิริราช" />
+      </div>
+    </header>
+
+    <main>
+      <section class="screen" id="menuScreen">
+        <h1 class="page-title">กรุณาเลือกรายการรับบริการ</h1>
+        <div class="menu-body">
+          <img class="machine" src="kiosk_logo2.png" alt="เครื่องฉายรังสี" />
+          <div class="room-buttons" id="kRooms"></div>
+        </div>
+      </section>
+
+      <section class="screen hidden" id="roomScreen">
+        <button class="back" id="kBack">‹ กลับ</button>
+        <h1 class="page-title" id="kRoomTitle">เครื่องฉายรังสี</h1>
+        <div class="slot-section">
+          <div class="slot-label">ในเวลาทำการ</div>
+          <div class="slot-cards">
+            <div class="slot-card inwork" id="slotMorning"></div>
+            <div class="slot-card inwork" id="slotAfternoon"></div>
+          </div>
+        </div>
+        <div class="slot-section">
+          <div class="slot-label">คลินิกนอกเวลา</div>
+          <div class="slot-card wide inwork" id="slotAfter"></div>
+        </div>
+      </section>
+    </main>
+
+    <div class="overlay hidden" id="printing">
+      <div class="print-card">
+        <div class="spinner"></div>
+        <div class="ptxt" id="ptxt">กำลังพิมพ์บัตรคิว...</div>
+        <div class="pnum" id="pNum"></div>
+      </div>
+    </div>
+
+    <!-- หน้าตั้งค่าระบบ (แตะมุมซ้ายบน 5 ครั้ง) — IP server / เครื่องพิมพ์ / เวลาปิดเครื่อง -->
+    <div class="overlay hidden" id="sysPanel">
+      <div class="sys-card">
+        <h2>ตั้งค่าระบบ Kiosk</h2>
+
+        <label class="sfield"><span>IP / ที่อยู่เซิร์ฟเวอร์</span>
+          <input id="sysServer" type="text" placeholder="http://192.168.1.100:8888" />
+        </label>
+
+        <label class="sfield"><span>เครื่องพิมพ์</span>
+          <select id="sysPrinter"><option value="">— กำลังโหลดรายการ... —</option></select>
+          <small>เลือกเครื่องพิมพ์ที่ต่อกับเครื่องนี้ หรือเลือก “บันทึกเป็น PDF” เมื่อยังไม่มีเครื่องพิมพ์</small>
+        </label>
+
+        <label class="sfield"><span>เวลาปิดเครื่องอัตโนมัติ</span>
+          <input id="sysShutdown" type="time" />
+          <small>เว้นว่าง = ไม่ปิดเครื่องอัตโนมัติ</small>
+        </label>
+
+        <div class="smsg" id="sysMsg"></div>
+
+        <div class="sbtns">
+          <button class="sbtn primary" id="sysSave">บันทึก</button>
+          <button class="sbtn" id="sysTest">ทดสอบพิมพ์</button>
+          <button class="sbtn sec" id="sysClose">ปิด</button>
+        </div>
+        <p class="shint">แตะมุมซ้ายบน 5 ครั้งเพื่อเปิดหน้านี้ • ตั้งค่าเครื่องพิมพ์ขั้นสูง: Ctrl+Shift+P</p>
+      </div>
+    </div>
+
+    <!-- หน้าตั้งค่าเครื่องพิมพ์ (เปิดด้วย Ctrl+Shift+P) -->
+    <div class="overlay hidden" id="adminPanel">
+      <div class="admin-card">
+        <h2>ตั้งค่าการพิมพ์บัตรคิว</h2>
+
+        <label class="afield"><span>โหมดการพิมพ์</span>
+          <select id="apMode">
+            <option value="thermal">เครื่องพิมพ์ความร้อน (Thermal)</option>
+            <option value="pdf">บันทึกเป็นไฟล์ PDF (ทดสอบ/ไม่มีเครื่องพิมพ์)</option>
+          </select>
+        </label>
+
+        <div id="apThermalBox">
+          <label class="afield"><span>เลือกเครื่องพิมพ์ (Windows)</span>
+            <select id="apPrinter"><option value="">— โหลดรายการ... —</option></select>
+          </label>
+          <div class="arow">
+            <label class="afield"><span>ชนิด</span>
+              <select id="apType">
+                <option value="epson">epson</option>
+                <option value="star">star</option>
+                <option value="tanca">tanca</option>
+                <option value="daruma">daruma</option>
+                <option value="brother">brother</option>
+              </select>
+            </label>
+            <label class="afield"><span>ความกว้าง (chars)</span>
+              <input id="apWidth" type="number" value="48" />
+            </label>
+          </div>
+          <label class="afield"><span>interface (ขั้นสูง เช่น tcp://ip:9100)</span>
+            <input id="apInterface" type="text" placeholder="printer:ชื่อเครื่องพิมพ์ หรือ tcp://..." />
+          </label>
+        </div>
+
+        <div id="apPdfBox">
+          <label class="afield"><span>โฟลเดอร์บันทึก PDF</span>
+            <input id="apPdfDir" type="text" placeholder="tickets-pdf" />
+          </label>
+        </div>
+
+        <div class="amsg" id="apMsg"></div>
+
+        <div class="abtns">
+          <button class="abtn primary" id="apSave">บันทึก</button>
+          <button class="abtn" id="apTest">ทดสอบพิมพ์</button>
+          <button class="abtn" id="apOpenPdf">เปิดโฟลเดอร์ PDF</button>
+          <button class="abtn sec" id="apClose">ปิด</button>
+        </div>
+        <p class="ahint">เปิดหน้านี้ด้วย Ctrl+Shift+P • ออกจาก Kiosk ด้วย Ctrl+Shift+Q</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

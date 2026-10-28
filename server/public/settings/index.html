@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ตั้งค่าระบบคิว</title>
+  <link rel="stylesheet" href="/shared/fonts.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="bar">
+    <div class="bar-left">
+      <a class="btn back" href="/"><i data-lucide="arrow-left"></i> ภาพรวม</a>
+      <h1>ตั้งค่าระบบคิว</h1>
+    </div>
+    <nav class="links"><a href="/display" target="_blank">จอแสดงผล</a> · <a href="/calling" target="_blank">เรียกคิว</a> · <a href="/reports">รายงาน</a> · <a href="/kiosk-web" target="_blank">ทดสอบ Kiosk</a></nav>
+  </header>
+
+  <div class="layout">
+    <aside class="tabs">
+      <button class="tab active" data-tab="general">ทั่วไป</button>
+      <button class="tab" data-tab="displaytext">ข้อความจอแสดงผล</button>
+      <button class="tab" data-tab="rooms">ห้องบริการ</button>
+      <button class="tab" data-tab="slots">ช่วงเวลา/โควต้า</button>
+      <button class="tab" data-tab="profiles">หน้าบัตรคิว</button>
+      <button class="tab" data-tab="playlist">เพลย์ลิสต์มีเดีย</button>
+      <button class="tab" data-tab="kiosk">เครื่อง Kiosk</button>
+      <button class="tab" data-tab="downloads">ดาวน์โหลด</button>
+      <button class="tab" data-tab="users">ผู้ใช้งาน</button>
+      <button class="tab" data-tab="reset">รีเซ็ตคิว</button>
+    </aside>
+    <main class="content" id="content"></main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/shared/vendor/lucide.min.js"></script>
+  <script src="/shared/common.js"></script>
+  <script src="app.js"></script>
+  <script>if (window.lucide) lucide.createIcons();</script>
+</body>
+</html>

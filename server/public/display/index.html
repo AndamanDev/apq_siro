@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>จอแสดงผลคิว</title>
+  <link rel="stylesheet" href="style.css?v=12" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img class="logo" src="logo.png?v=4" alt="SiRi" onerror="this.style.display='none'" />
+    </div>
+    <div class="bar">
+      <div class="datetime" id="datetime">—</div>
+    </div>
+  </header>
+
+  <main class="stage">
+    <section class="rooms" id="rooms"></section>
+    <section class="center">
+      <div class="media" id="media"></div>
+    </section>
+  </main>
+
+  <footer class="ticker">
+    <div class="ticker-inner" id="ticker">ยินดีต้อนรับ</div>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/shared/common.js?v=2"></script>
+  <script src="announcer.js?v=2"></script>
+  <script src="media.js?v=2"></script>
+  <script src="app.js?v=7"></script>
+</body>
+</html>

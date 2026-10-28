@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>เรียกคิว</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Login overlay -->
+  <div class="overlay" id="loginOverlay">
+    <form class="card login" id="loginForm">
+      <h2>เข้าสู่ระบบเรียกคิว</h2>
+      <input id="username" placeholder="ชื่อผู้ใช้" autocomplete="username" value="admin" />
+      <input id="password" type="password" placeholder="รหัสผ่าน" autocomplete="current-password" value="123456" />
+      <div class="err" id="loginErr"></div>
+      <button type="submit">เข้าสู่ระบบ</button>
+    </form>
+  </div>
+
+  <header class="bar">
+    <div>
+      <label>ห้องที่ประจำการ:</label>
+      <select id="roomSelect"></select>
+    </div>
+    <div class="who"><span id="whoami"></span> <button id="logout" class="link">ออกจากระบบ</button></div>
+  </header>
+
+  <main class="grid">
+    <section class="lists card">
+      <div class="tabs">
+        <button class="tab active" data-tab="waiting">รอเรียก (<span id="cntWaiting">0</span>)</button>
+        <button class="tab" data-tab="skipped">ข้ามแล้ว (<span id="cntSkipped">0</span>)</button>
+        <button class="tab" data-tab="parked">พักไว้ (<span id="cntParked">0</span>)</button>
+        <button class="tab" data-tab="done">เรียก/บริการแล้ว (<span id="cntDone">0</span>)</button>
+      </div>
+      <div class="list-controls">
+        <div class="ctl-group">
+          <label>เรียงลำดับ:</label>
+          <div class="seg" id="sortSeg">
+            <button class="seg-btn active" data-sort="slot">ตามช่วงเวลา</button>
+            <button class="seg-btn" data-sort="issued">ตามเวลาออกบัตร</button>
+          </div>
+        </div>
+        <div class="ctl-group">
+          <label>กรองช่วงเวลา:</label>
+          <select id="slotFilter"></select>
+        </div>
+      </div>
+      <div class="list" id="list"></div>
+      <div class="pager" id="pager"></div>
+    </section>
+
+    <section class="now card">
+      <div class="now-label">กำลังเรียก</div>
+      <div class="now-number" id="nowNumber">—</div>
+      <div class="now-actions">
+        <button class="big call" id="btnNext"><span>เรียกคิวถัดไป</span><i data-lucide="play"></i></button>
+        <button class="big recall" id="btnRecall"><span>เรียกซ้ำ</span><i data-lucide="rotate-cw"></i></button>
+        <button class="big park" id="btnPark"><span>พักคิว</span><i data-lucide="pause"></i></button>
+        <button class="big done" id="btnDone"><span>เสร็จสิ้น</span><i data-lucide="check"></i></button>
+        <button class="big skip" id="btnSkip"><span>ข้าม</span><i data-lucide="skip-forward"></i></button>
+        <button class="big cancel" id="btnCancel"><span>ยกเลิกคิว</span><i data-lucide="x"></i></button>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/shared/vendor/lucide.min.js"></script>
+  <script src="/shared/common.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
