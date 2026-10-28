@@ -21,5 +21,17 @@ module.exports = function kioskRouter() {
     });
   });
 
+  // QR บนบัตรคิว (kiosk-web พิมพ์ผ่านเบราว์เซอร์ — ไม่มีไลบรารี QR ฝั่งหน้าเว็บ)
+  router.get('/qr', async (req, res) => {
+    const text = String(req.query.text || '').slice(0, 200);
+    if (!text) return res.status(400).json({ error: 'text required' });
+    try {
+      const svg = await require('qrcode').toString(text, { type: 'svg', margin: 1 });
+      res.type('image/svg+xml').send(svg);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
   return router;
 };

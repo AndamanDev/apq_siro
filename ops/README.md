@@ -45,6 +45,28 @@
 
 ---
 
+## เครื่อง Kiosk แยก (ไม่ต้องลงโปรแกรม) — `ops\kiosk-edge.bat`
+
+ตู้รับบัตรคิวที่ไม่ใช่เครื่องแม่ข่าย ใช้แค่ **Edge + เครื่องพิมพ์ใบเสร็จ** ไม่ต้องลง Node / โค้ด
+
+1. ต่อเครื่องพิมพ์ใบเสร็จ (USB) + ลง driver → ตั้งเป็น **เครื่องพิมพ์ default** ของ Windows
+   (Settings › Printers › ปิด "Let Windows manage my default printer") · ขนาดกระดาษใน driver = **80mm / Receipt**
+2. เอาไฟล์ `kiosk-edge.bat` มาไว้ที่เครื่อง — `Win+R` › `cmd` แล้ววาง:
+   ```
+   curl -L -o "%USERPROFILE%\Desktop\kiosk-edge.bat" https://raw.githubusercontent.com/AndamanDev/apq_siro/main/ops/kiosk-edge.bat
+   ```
+3. ดับเบิลคลิก → ครั้งแรกถาม **IP เครื่องแม่ข่าย** (พิมพ์แค่ `192.168.1.103` ก็ได้) แล้วจำไว้
+4. บนหน้าตู้กด **Ctrl+Shift+P** = พิมพ์บัตรทดสอบ (ไม่ออกคิวจริง) · ออกจากเต็มจอ: **Alt+F4**
+5. ให้เปิดเองตอนเปิดเครื่อง: `cmd` › `"%USERPROFILE%\Desktop\kiosk-edge.bat" autostart`
+
+IP เครื่องแม่ข่ายเปลี่ยน → `kiosk-edge.bat ip` · ดูหน้าตาบัตรบนจอ: `http://<IP>:8888/kiosk-web/?sample=1`
+บัตรใช้แบบที่ตั้งใน `/settings` (โลโก้ · ข้อความ · ขนาดตัวอักษร · QR · จำนวนสำเนา) เหมือนโปรแกรม Kiosk (Electron)
+
+> ต่างจากโปรแกรม Kiosk (Electron): พิมพ์ผ่าน driver ของ Windows ไม่ใช่คำสั่ง ESC/POS ตรง —
+> ตัดกระดาษ/ความยาวบัตรขึ้นกับ driver · สถานะ "พิมพ์ไม่สำเร็จ" ตรวจไม่ได้ (เบราว์เซอร์ไม่รู้ว่ากระดาษออกไหม)
+
+---
+
 ## ระบบเปิดเองอย่างไร
 
 งาน Task Scheduler **APQueue** (ตอน login) → `ops\tools\run-server.js` ทำงานเบื้องหลังไม่มีหน้าต่าง

@@ -50,8 +50,11 @@
         <div class="pnum" id="pNum"></div>
       </div>
     </div>
-    <div class="hint">โหมดทดสอบบนเบราว์เซอร์ — เครื่องจริงใช้โปรแกรม Kiosk (Electron) เพื่อพิมพ์บัตร</div>
+    <div class="hint">โหมดทดสอบบนเบราว์เซอร์ (ไม่พิมพ์บัตร) — ตู้จริงเปิดด้วย ops\kiosk-edge.bat หรือโปรแกรม Kiosk (Electron)</div>
   </div>
+
+  <!-- บัตรคิวสำหรับพิมพ์ (โหมด ?print=1) — ซ่อนบนจอ เห็นเฉพาะตอนพิมพ์ -->
+  <div id="ticketPrint"></div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="/shared/common.js"></script>
